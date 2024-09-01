@@ -1,6 +1,8 @@
+// golden
+// 6/12/2018
+//
 
-
-#include "../include/debug.h"
+#include "ddebug.h"
 
 int g_debugging;
 struct server_client *curdbgcli;
