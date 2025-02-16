@@ -57,7 +57,7 @@ struct {															\
 #define	TAILQ_FOREACH(var, head, field)				\
 	for ((var) = TAILQ_FIRST((head));				\
 	    (var);										\
-(var) = TAILQ_NEXT((var), field))
+		(var) = TAILQ_NEXT((var), field))
 
 struct qm_trace {
 	char * lastfile;
@@ -238,7 +238,7 @@ struct filedesc {
 	void *fd_rdir;
 	void *fd_jdir;
 };
-
+																		
 TYPE_BEGIN(struct proc, 0x800); // XXX: random, don't use directly without fixing it
 TYPE_FIELD(struct proc *p_forw, 0);
 TYPE_FIELD(TAILQ_HEAD(, thread) p_threads, 0x10);
@@ -246,9 +246,9 @@ TYPE_FIELD(struct ucred *p_ucred, 0x40);
 TYPE_FIELD(struct filedesc *p_fd, 0x48);
 TYPE_FIELD(int pid, 0xB0);
 TYPE_FIELD(struct vmspace *p_vmspace, 0x168);
-TYPE_FIELD(char p_comm[32], 0x454);
 TYPE_FIELD(char titleid[16], 0x390);
 TYPE_FIELD(char contentid[64], 0x3D4);
+TYPE_FIELD(char p_comm[32], 0x454);
 TYPE_FIELD(char path[64], 0x474);
 TYPE_END();
 
