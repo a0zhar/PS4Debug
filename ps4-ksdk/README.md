@@ -1,5 +1,6 @@
-This is an SDK for PlayStation 4 kernels! Support for 5.05 only right now!  
-Created by **Alexandro Sanchez Bach** and maintained by golden  
-Check out Alex's project [Oribital](https://github.com/AlexAltea/orbital)
+# PS4-KSDK
 
-If you have some code you want to commit, just message me, open an issue, or make a pull request. I can add it or you can.
+PS4-KSDK is an **SDK for PlayStation 4 kernels**, originally created by **Alexandro Sanchez Bach**.  
+
+Thanks to [EchoStretch](https://github.com/EchoStretch/) and their work on [ps4-ksdk](https://github.com/EchoStretch/ps4-ksdk/tree/49bd57c99c9c166b8d25ded7458f39108280d4e2), this implementation is now **firmware agnostic**, supporting:
+- **OFW 5.05, 6.72, and 7.00 through 11.00**.
