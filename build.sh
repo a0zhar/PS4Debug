@@ -16,17 +16,16 @@ clean_target() {
     fi
 }
 
-# If the first argument is "clean", clean the targets
-if (( $# == 1 )); then
-    if [[ $1 == "clean" ]]; then
-        echo "Cleanup Option Selected..."
-        clean_target "ps4-ksdk"
-        clean_target "ps4-payload-sdk"
-        clean_target "installer"
-        clean_target "debugger"
-        clean_target "kdebugger"
-        echo "done..."
-    fi
+# Clean the targets if the first argument is "clean"
+if [[ $# -eq 1 && $1 == "clean" ]]; then
+    echo "Cleanup Option Selected..."
+    clean_target "ps4-ksdk"
+    clean_target "ps4-payload-sdk"
+    clean_target "installer"
+    clean_target "debugger"
+    clean_target "kdebugger"
+    echo "done..."
+    exit 0
 fi
 
 # Function to build a specific target directory
