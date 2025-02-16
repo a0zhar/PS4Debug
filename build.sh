@@ -7,7 +7,7 @@ set -e
 clean_target() {
     echo "Cleaning Up $1"
     if [[ -d "$1" ]]; then
-        cd "$1" || exit 1
+        cd "$1" || { echo "Failed to enter directory $1"; exit 1; }
         make clean
         cd ..
     else
