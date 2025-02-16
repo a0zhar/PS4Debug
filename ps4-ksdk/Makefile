@@ -20,12 +20,12 @@ $(TARGET): $(ODIR) $(OBJS)
 
 # Compile C source files
 $(ODIR)/%.o: $(SDIR)/%.c
-	@echo "Compiling C: $<"
+	@echo "Compiling $<"
 	$(CC) -c -o $@ $< $(CFLAGS) $(LFLAGS)
 
 # Compile assembly source files
 $(ODIR)/%.o: $(SDIR)/%.s
-	@echo "Compiling Assembly: $<"
+	@echo "Compiling Assembly $<"
 	$(CC) -c -o $@ $< $(CFLAGS) $(LFLAGS)
 
 # Create build directory if it doesn't exist
