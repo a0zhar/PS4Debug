@@ -410,6 +410,94 @@ int ResizeTheAddrListBuffer(uint64_t **pAddressMem, size_t *pCurrentSz) {
    return 1;
 }
 
+
+// Structure Representing Arguments used for scanning a single process memory (vm map entry)
+typedef
+struct proc_vm_map_entry_scan_args_t {
+   struct proc_vm_map_entry* map_entry;  // The memory section to be scanned
+   int fd;  // File descriptor for network communication
+   struct cmd_proc_scan_packet* scan_packet;  // Scan parameters
+   struct cmd_packet* packet;  // Network command packet
+   size_t value_size;  // Size of the value type being scanned
+}proc_vm_map_entry_scan_args;
+
+// Scans a single memory section of the process
+int proc_scan_single_vm_map_entry_handle(proc_vm_map_entry_scan_args* scan_args, uint64_t** scan_results_output, size_t* result_count) {
+   struct cmd_proc_scan_packet* sp = scan_args->scan_packet;
+   int fd = scan_args->fd;
+   struct proc_vm_map_entry maps_segment = *scan_args->map_entry;
+   size_t value_size = scan_args->value_size;
+
+   // Allocate memory for data buffer
+   unsigned char* data = (unsigned char*)pfmalloc(sp->lenData);
+   if (!data) return -1;
+
+   net_send_status(fd, CMD_SUCCESS);
+   net_recv_data(fd, data, sp->lenData, 1);
+
+   unsigned char* pExtraValue = value_size == sp->lenData ? NULL : &data[value_size];
+   unsigned char* scanBuffer = (unsigned char*)pfmalloc(PAGE_SIZE);
+   if (!scanBuffer) {
+      free(data);
+      return -1;
+   }
+
+   // Initialize result storage
+   size_t addressCount = 0;
+   size_t allocatedSize = INIT_MAX_ADDR_COUNT * sizeof(uint64_t);
+   uint64_t* valid_addresses = (uint64_t*)pfmalloc(allocatedSize);
+   if (!valid_addresses) {
+      free(scanBuffer);
+      free(data);
+      return -1;
+   }
+
+   uint64_t section_start = maps_segment.start;
+   size_t section_length = maps_segment.end - section_start;
+   
+   uprintf("Scanning memory section: 0x%llX - 0x%llX",
+           maps_segment.start, maps_segment.end);
+   
+   // Iterate through the memory section
+   for (uint64_t j = 0; j < section_length; j += value_size) {
+      // If the current offset is at a page boundary, read the next page
+      if (j == 0 || !(j % PAGE_SIZE))
+         sys_proc_rw(
+            sp->pid, 
+            section_start, 
+            scanBuffer, 
+            PAGE_SIZE, 
+            0
+         );
+      
+      // Calculate the scan offset and current address
+      uint64_t scanOffset = j % PAGE_SIZE;
+      uint64_t curAddress = section_start + j;
+
+      // Run Comparison on the found value
+      if (proc_scan_compareValues(sp->compareType, sp->valueType, value_size, data, scanBuffer + scanOffset, pExtraValue)) {
+         if (addressCount + 1 >= allocatedSize / sizeof(uint64_t)) {
+            if (ResizeTheAddrListBuffer(&valid_addresses, &allocatedSize) == -1) {
+               free(valid_addresses);
+               free(scanBuffer);
+               free(data);
+               return -1;
+            }
+         }
+         valid_addresses[addressCount++] = curAddress;
+      }
+   }
+
+   uprintf("Section scan completed. Found %zu matches.", addressCount);
+
+   *scan_results_output = valid_addresses;
+   *result_count = addressCount;
+
+   free(scanBuffer);
+   free(data);
+   return 1;
+}
+
 // This replaces the previous version! It's console scan recreation
 int proc_scan_handle(int fd, struct cmd_packet *packet) {
    PPROC_SCAN_PKT sp;
