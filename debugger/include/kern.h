@@ -1,9 +1,8 @@
-
 #pragma once
 #ifndef _KERN_H
 #define _KERN_H
 
-#include "../../ps4-payload-sdk/include/ps4.h"
+#include <ps4.h>
 #include "./protocol.h"
 #include "./net.h"
 

@@ -3,7 +3,7 @@
 #define _KDEBUGGER_H
 
 #include <stdarg.h>
-#include "../../ps4-payload-sdk/include/ps4.h"
+#include <ps4.h>
 
 // This can be implemented in the future, but for now it's non-implemented
 #define nlPrintf(...) 

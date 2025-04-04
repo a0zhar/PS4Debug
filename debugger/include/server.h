@@ -1,10 +1,9 @@
 
-
 #pragma once
 #ifndef _SERVER_H
 #define _SERVER_H
 
-#include "../../ps4-payload-sdk/include/ps4.h"
+#include <ps4.h>
 #include "./protocol.h"
 #include "./net.h"
 #include "./proc.h"

@@ -4,7 +4,6 @@
 
 #include "../../ps4-payload-sdk/include/types.h"
 #include "../../ps4-payload-sdk/include/network.h"
-#include "./pkt_sizes.h"
 #include "./errno.h"
 #include "./kdbg.h"
 
@@ -71,6 +70,69 @@
 #define CMD_FATAL_STATUS(s) ((s >> 28) == 15)
 
 #define CMD_PACKET_SIZE 12
+
+#define CMD_PROC_READ_PACKET_SIZE 16
+#define CMD_PROC_WRITE_PACKET_SIZE 16
+#define CMD_PROC_MAPS_PACKET_SIZE 4
+#define CMD_PROC_INSTALL_PACKET_SIZE 4
+#define CMD_PROC_INSTALL_RESPONSE_SIZE 8
+#define CMD_PROC_CALL_PACKET_SIZE 68
+#define CMD_PROC_CALL_RESPONSE_SIZE 12
+#define CMD_PROC_ELF_PACKET_SIZE 8
+#define CMD_PROC_PROTECT_PACKET_SIZE 20
+#define CMD_PROC_SCAN_PACKET_SIZE 10
+#define CMD_PROC_INFO_PACKET_SIZE 4
+#define CMD_PROC_INFO_RESPONSE_SIZE 188
+#define CMD_PROC_ALLOC_PACKET_SIZE 8
+#define CMD_PROC_ALLOC_RESPONSE_SIZE 8
+#define CMD_PROC_FREE_PACKET_SIZE 16
+#define CMD_DEBUG_ATTACH_PACKET_SIZE 4
+#define CMD_DEBUG_BREAKPT_PACKET_SIZE 16
+#define CMD_DEBUG_WATCHPT_PACKET_SIZE 24
+#define CMD_DEBUG_STOPTHR_PACKET_SIZE 4
+#define CMD_DEBUG_RESUMETHR_PACKET_SIZE 4
+#define CMD_DEBUG_GETREGS_PACKET_SIZE 4
+#define CMD_DEBUG_SETREGS_PACKET_SIZE 8
+#define CMD_DEBUG_STOPGO_PACKET_SIZE 4
+#define CMD_DEBUG_THRINFO_PACKET_SIZE 4
+#define CMD_DEBUG_THRINFO_RESPONSE_SIZE 40
+#define CMD_KERN_READ_PACKET_SIZE 12
+#define CMD_KERN_WRITE_PACKET_SIZE 12
+#define CMD_CONSOLE_PRINT_PACKET_SIZE 4
+#define CMD_CONSOLE_NOTIFY_PACKET_SIZE 8
+#define CMD_CONSOLE_INFO_RESPONSE_SIZE 8
+
+// Enumeration for value types used in process scanning
+enum cmd_proc_scan_valuetype {
+    SCAN_TYPE_U8 = 0,
+    SCAN_TYPE_I8,
+    SCAN_TYPE_U16,
+    SCAN_TYPE_I16,
+    SCAN_TYPE_U32,
+    SCAN_TYPE_I32,
+    SCAN_TYPE_U64,
+    SCAN_TYPE_I64,
+    SCAN_TYPE_FLOAT,
+    SCAN_TYPE_DOUBLE,
+    SCAN_TYPE_BYTE_ARRAY,
+    SCAN_TYPE_STRING
+} __attribute__((__packed__));
+
+// Enumeration for comparison types used in process scanning
+enum cmd_proc_scan_comparetype {
+    SCAN_CMP_EXACT_MATCH = 0, // Comparison: Exact value equality
+    SCAN_CMP_FUZZY,           // Comparison: Fuzzy match for floats
+    SCAN_CMP_GREATER_THAN,    // Comparison: >
+    SCAN_CMP_SMALLER_THAN,    // Comparison: <
+    SCAN_CMP_RANGE_BETWEEN,   // Comparison: a < x < b (ordered)
+    SCAN_CMP_VALUE_INCREASED, // Comparison: Current > Previous
+    SCAM_CMP_INCREASED_BY,    // Comparison: Current == Previous + X
+    SCAM_CMP_VALUE_DECREASED, // Comparison: Current < Previous
+    SCAM_CMP_DECREASED_BY,    // Comparison: Current == Previous - X
+    SCAM_CMP_VALUE_CHANGED,   // Comparison: Current != Previous
+    SCAM_CMP_VALUE_UNCHANGED, // Comparison: Current == Previous
+    SCAM_CMP_UNKNOWN_VALUE    // Comparison: First scan state
+} __attribute__((__packed__));
 
 
 // Packet structure for communication between debugger and target
@@ -144,37 +206,6 @@ struct cmd_proc_protect_packet {
     uint32_t newprot;   // New protection
 } __attribute__((packed));
 
-// Enumeration for value types used in process scanning
- enum cmd_proc_scan_valuetype {
-    valTypeUInt8 = 0,
-    valTypeInt8,
-    valTypeUInt16,
-    valTypeInt16,
-    valTypeUInt32,
-    valTypeInt32,
-    valTypeUInt64,
-    valTypeInt64,
-    valTypeFloat,
-    valTypeDouble,
-    valTypeArrBytes,
-    valTypeString
-} __attribute__((__packed__));
-
-// Enumeration for comparison types used in process scanning
-enum cmd_proc_scan_comparetype {
-    cmpTypeExactValue = 0,
-    cmpTypeFuzzyValue,
-    cmpTypeBiggerThan,
-    cmpTypeSmallerThan,
-    cmpTypeValueBetween,
-    cmpTypeIncreasedValue,
-    cmpTypeIncreasedValueBy,
-    cmpTypeDecreasedValue,
-    cmpTypeDecreasedValueBy,
-    cmpTypeChangedValue,
-    cmpTypeUnchangedValue,
-    cmpTypeUnknownInitialValue
-} __attribute__((__packed__));
 
 // Structure for packet used in process scanning
 struct cmd_proc_scan_packet {
