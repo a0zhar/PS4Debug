@@ -1,10 +1,7 @@
 # PS4Debug (A PS4 Debugging Payload)
-This repository contains my custom version or fork of GiantPluto's FW 6.72 port of the ps4debug payload. I am the sole maintainer of this version and will be responsible for adding new features, pushing code improvements, fixes, etc. 
+My custom fork of PS4Debug includes my own tweaks and modifications, and allows building a single PS4Debug payload binary compatible with multiple PS4 OFWs. This eliminates the need to maintain five or more separate projects for different OFWs. I am the sole maintainer of this version and will be responsible for adding new features, implementing code improvements, fixing issues, and more.
 
-A huge objective/goal is to make this PS4Debug Source Code firmware-agnostic, meaning that the ps4debug.bin payload compiled from this Source Code will be compatible with the following system firmwares: **5.05, 6.72, 7.02, 7.55, and 9.00**. Eliminating the need of having 5 seperate source codes, one for each firmware version.
-
-## TODOs and News
-
+## News
 ### Recreating ctn123's Console Scan Feature
 <details>
 <summary>See Explaination + Code</summary>
@@ -30,5 +27,7 @@ You need to send the value of **0xBDAA000D** to the PS4Debug server if you want 
 
 
 ## Credits
-- GiantPluto - for his 6.72 port of the ps4debug payload
-- jogolden - for originally creating this 
+- ctn123 - For explaining the logic behind his Console Scan Feature in Discord DM's. 
+- DeathRGH - For his frame4 Repo (A Multi-Firmware Compatible Version of PS4Debug)
+- GiantPluto - For the initial 6.72 Compatible version of this repo.
+- jogolden
